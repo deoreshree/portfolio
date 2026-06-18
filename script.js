@@ -1,12 +1,15 @@
-// ==========================
-// Portfolio JavaScript
-// ==========================
+// ==========================================
+// SHREE DEORE PORTFOLIO - script.js
+// Part 1 : Navbar + Mobile Menu + Active Link
+// ==========================================
 
+// ===========================
 // Navbar Scroll Effect
+// ===========================
 
-window.addEventListener("scroll", function () {
+const navbar = document.querySelector(".navbar");
 
-    const navbar = document.querySelector(".navbar");
+window.addEventListener("scroll", () => {
 
     if (window.scrollY > 50) {
 
@@ -22,20 +25,55 @@ window.addEventListener("scroll", function () {
 
 });
 
-// ==========================
+// ===========================
+// Mobile Menu
+// ===========================
+
+const menuToggle = document.querySelector(".menu-toggle");
+const navLinks = document.querySelector(".nav-links");
+
+if (menuToggle) {
+
+    menuToggle.addEventListener("click", () => {
+
+        navLinks.classList.toggle("active");
+
+    });
+
+}
+
+// ===========================
+// Close Menu After Click
+// ===========================
+
+document.querySelectorAll(".nav-links a").forEach(link => {
+
+    link.addEventListener("click", () => {
+
+        if (navLinks.classList.contains("active")) {
+
+            navLinks.classList.remove("active");
+
+        }
+
+    });
+
+});
+
+// ===========================
 // Active Navigation Link
-// ==========================
+// ===========================
 
 const sections = document.querySelectorAll("section");
-const navLinks = document.querySelectorAll(".nav-links a");
+const links = document.querySelectorAll(".nav-links a");
 
 window.addEventListener("scroll", () => {
 
     let current = "";
 
-    sections.forEach((section) => {
+    sections.forEach(section => {
 
-        const sectionTop = section.offsetTop - 100;
+        const sectionTop = section.offsetTop - 120;
 
         if (window.scrollY >= sectionTop) {
 
@@ -45,7 +83,7 @@ window.addEventListener("scroll", () => {
 
     });
 
-    navLinks.forEach((link) => {
+    links.forEach(link => {
 
         link.classList.remove("active");
 
@@ -59,11 +97,49 @@ window.addEventListener("scroll", () => {
 
 });
 
-// ==========================
-// Typing Effect
-// ==========================
+// ===========================
+// Smooth Scroll
+// ===========================
 
-const typingText = [
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+
+    anchor.addEventListener("click", function (e) {
+
+        e.preventDefault();
+
+        const target = document.querySelector(this.getAttribute("href"));
+
+        if (target) {
+
+            target.scrollIntoView({
+
+                behavior: "smooth"
+
+            });
+
+        }
+
+    });
+
+});
+
+// ===========================
+// Console Message
+// ===========================
+
+console.log("🚀 Shree Deore Portfolio Loaded Successfully");
+// ==========================================
+// SHREE DEORE PORTFOLIO - script.js
+// Part 2 : Typing Effect + Fade Animation
+// ==========================================
+
+// ===========================
+// Typing Effect
+// ===========================
+
+const typingElement = document.querySelector(".hero h2");
+
+const words = [
 
     "AI & Machine Learning Student",
 
@@ -75,64 +151,66 @@ const typingText = [
 
 ];
 
-let index = 0;
-let charIndex = 0;
+let wordIndex = 0;
+let letterIndex = 0;
+let isDeleting = false;
 
-const title = document.querySelector(".hero h2");
+function typingAnimation() {
 
-function typeEffect() {
+    if (!typingElement) return;
 
-    if (!title) return;
+    const currentWord = words[wordIndex];
 
-    if (charIndex < typingText[index].length) {
+    if (!isDeleting) {
 
-        title.textContent += typingText[index].charAt(charIndex);
+        typingElement.textContent =
+            currentWord.substring(0, letterIndex + 1);
 
-        charIndex++;
+        letterIndex++;
 
-        setTimeout(typeEffect, 100);
+        if (letterIndex === currentWord.length) {
 
-    } else {
+            isDeleting = true;
 
-        setTimeout(eraseEffect, 1500);
+            setTimeout(typingAnimation, 1500);
 
-    }
-
-}
-
-function eraseEffect() {
-
-    if (charIndex > 0) {
-
-        title.textContent = typingText[index].substring(0, charIndex - 1);
-
-        charIndex--;
-
-        setTimeout(eraseEffect, 50);
-
-    } else {
-
-        index++;
-
-        if (index >= typingText.length) {
-
-            index = 0;
+            return;
 
         }
 
-        setTimeout(typeEffect, 300);
+    } else {
+
+        typingElement.textContent =
+            currentWord.substring(0, letterIndex - 1);
+
+        letterIndex--;
+
+        if (letterIndex === 0) {
+
+            isDeleting = false;
+
+            wordIndex++;
+
+            if (wordIndex >= words.length) {
+
+                wordIndex = 0;
+
+            }
+
+        }
 
     }
 
+    setTimeout(typingAnimation, isDeleting ? 60 : 120);
+
 }
 
-title.textContent = "";
+typingAnimation();
 
-typeEffect();
 
-// ==========================
-// Fade Animation
-// ==========================
+// ===========================
+// Fade In Animation
+// ===========================
 
 const observer = new IntersectionObserver(
 
@@ -143,6 +221,7 @@ const observer = new IntersectionObserver(
         if (entry.isIntersecting) {
 
             entry.target.style.opacity = "1";
+
             entry.target.style.transform = "translateY(0px)";
 
         }
@@ -153,7 +232,7 @@ const observer = new IntersectionObserver(
 
 {
 
-    threshold: 0.2,
+    threshold: 0.15
 
 }
 
@@ -162,50 +241,149 @@ const observer = new IntersectionObserver(
 document.querySelectorAll("section").forEach((section) => {
 
     section.style.opacity = "0";
+
     section.style.transform = "translateY(60px)";
-    section.style.transition = "1s";
+
+    section.style.transition = "all 0.8s ease";
 
     observer.observe(section);
 
 });
 
-// ==========================
+
+// ===========================
+// Card Hover Animation
+// ===========================
+
+const cards = document.querySelectorAll(
+
+".card, .project-card, .academic-card"
+
+);
+
+cards.forEach((card) => {
+
+    card.addEventListener("mouseenter", () => {
+
+        card.style.transform = "translateY(-10px) scale(1.02)";
+
+    });
+
+    card.addEventListener("mouseleave", () => {
+
+        card.style.transform = "translateY(0px) scale(1)";
+
+    });
+
+});
+
+
+// ===========================
+// Image Animation
+// ===========================
+
+const heroImage = document.querySelector(".hero-image");
+
+if (heroImage) {
+
+    heroImage.animate(
+
+        [
+
+            {
+
+                transform: "translateY(0px)"
+
+            },
+
+            {
+
+                transform: "translateY(-12px)"
+
+            },
+
+            {
+
+                transform: "translateY(0px)"
+
+            }
+
+        ],
+
+        {
+
+            duration: 3000,
+
+            iterations: Infinity
+
+        }
+
+    );
+
+}
+// ==========================================
+// SHREE DEORE PORTFOLIO
+// Part 3 : Cursor Light + Scroll Top +
+// Progress Bar + Loading Animation
+// ==========================================
+
+// ===========================
+// Cursor Light Effect
+// ===========================
+
+const cursorLight = document.querySelector(".cursor-light");
+
+if (cursorLight) {
+
+    document.addEventListener("mousemove", (e) => {
+
+        cursorLight.style.left = e.clientX + "px";
+        cursorLight.style.top = e.clientY + "px";
+
+    });
+
+}
+
+// ===========================
 // Scroll To Top Button
-// ==========================
+// ===========================
 
-const topBtn = document.createElement("button");
+const topButton = document.createElement("button");
 
-topBtn.innerHTML = "↑";
+topButton.innerHTML = "↑";
 
-topBtn.style.position = "fixed";
-topBtn.style.bottom = "20px";
-topBtn.style.right = "20px";
-topBtn.style.padding = "15px";
-topBtn.style.border = "none";
-topBtn.style.borderRadius = "50%";
-topBtn.style.background = "#3b82f6";
-topBtn.style.color = "white";
-topBtn.style.fontSize = "20px";
-topBtn.style.cursor = "pointer";
-topBtn.style.display = "none";
+topButton.style.position = "fixed";
+topButton.style.bottom = "20px";
+topButton.style.right = "20px";
+topButton.style.width = "55px";
+topButton.style.height = "55px";
+topButton.style.border = "none";
+topButton.style.borderRadius = "50%";
+topButton.style.background = "#3B82F6";
+topButton.style.color = "#fff";
+topButton.style.fontSize = "22px";
+topButton.style.cursor = "pointer";
+topButton.style.display = "none";
+topButton.style.zIndex = "9999";
+topButton.style.boxShadow = "0 0 20px rgba(59,130,246,.5)";
 
-document.body.appendChild(topBtn);
+document.body.appendChild(topButton);
 
 window.addEventListener("scroll", () => {
 
     if (window.scrollY > 300) {
 
-        topBtn.style.display = "block";
+        topButton.style.display = "block";
 
     } else {
 
-        topBtn.style.display = "none";
+        topButton.style.display = "none";
 
     }
 
 });
 
-topBtn.addEventListener("click", () => {
+topButton.addEventListener("click", () => {
 
     window.scrollTo({
 
@@ -217,68 +395,61 @@ topBtn.addEventListener("click", () => {
 
 });
 
-// ==========================
-// Console Message
-// ==========================
+// ===========================
+// Section Animation Delay
+// ===========================
 
-console.log("🚀 Shree Deore Portfolio Loaded Successfully");
-const light = document.querySelector(".cursor-light");
+const allCards = document.querySelectorAll(
 
-document.addEventListener("mousemove",function(e){
+".card,.project-card,.academic-card"
 
-    light.style.left = e.clientX + "px";
+);
 
-    light.style.top = e.clientY + "px";
+allCards.forEach((card, index) => {
+
+    card.style.animation = `fadeUp 0.8s ease ${index * 0.1}s forwards`;
 
 });
-const text = [
 
-"AI & ML Student",
+// ===========================
+// Navbar Shadow
+// ===========================
 
-"Flutter Developer",
+window.addEventListener("scroll", () => {
 
-"Web Developer",
+    const navbar = document.querySelector(".navbar");
 
-"Python Developer"
+    if (window.scrollY > 20) {
 
-];
+        navbar.style.boxShadow =
+            "0 10px 30px rgba(0,0,0,.35)";
 
-let count = 0;
+    } else {
 
-let index = 0;
-
-let currentText = "";
-
-let letter = "";
-
-(function type(){
-
-    if(count === text.length){
-
-        count = 0;
+        navbar.style.boxShadow = "none";
 
     }
 
-    currentText = text[count];
+});
 
-    letter = currentText.slice(0,++index);
+// ===========================
+// Page Loading Animation
+// ===========================
 
-    document.querySelector(".typing").textContent = letter;
+window.addEventListener("load", () => {
 
-    if(letter.length === currentText.length){
+    document.body.style.opacity = "1";
 
-        count++;
+});
 
-        index = 0;
+// ===========================
+// Console Message
+// ===========================
 
-        setTimeout(type,1500);
+console.log("🚀 Welcome to Shree Deore Portfolio");
 
-    }
+console.log("✨ Built with HTML CSS JavaScript");
 
-    else{
+console.log("📱 Fully Responsive");
 
-        setTimeout(type,100);
-
-    }
-
-})();
+console.log("🤖 AI & Machine Learning Student");
